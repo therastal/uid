@@ -29,6 +29,8 @@ assert len(unique_only) == COUNT
 ```go
 package main
 
+import "github.com/therastal/uid"
+
 func main() {
     count := 100000
 
@@ -36,8 +38,8 @@ func main() {
     uniqueOnly := map[int64]bool{}
 
     for i := 0; i < count; i++ {
-        withDuplicates[New().uid] = true
-        uniqueOnly[NewWithExisting(uniqueOnly).uid] = true
+        withDuplicates[uid.New().uid] = true
+        uniqueOnly[uid.NewWithExisting(uniqueOnly).uid] = true
     }
 
     fmt.Println("withDuplicates:", len(withDuplicates)) // len(withDuplicates) != count
