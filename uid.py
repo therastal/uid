@@ -5,7 +5,6 @@ import time
 from typing import Optional
 
 MAX_20BIT_INT = 524288
-MAX_CHARS_IN_RANDINT = 6
 
 
 class UID:
@@ -43,8 +42,8 @@ class UID:
     def _initialize(self, i: Optional["int"] = None):
         if i is None:
             time_ms = int(time.time() * 1000)
+            time_padded = time_ms * 1000000
             rand = random.randrange(MAX_20BIT_INT)
-            uidstr = str(time_ms) + str(rand).rjust(MAX_CHARS_IN_RANDINT, "0")
-            self._uid = int(uidstr)
+            self._uid = time_padded + rand
         else:
             self._uid = i
