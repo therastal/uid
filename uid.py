@@ -1,6 +1,7 @@
-"""Mostly a port of https://github.com/Mediagone/small-uid"""
+"""Inspired by https://github.com/Mediagone/small-uid"""
 
 import random
+import sqlite3
 import time
 from typing import Optional
 
@@ -30,6 +31,10 @@ class UID:
 
     def __hash__(self) -> int:
         return self._uid
+    
+    def __conform__(self, protocol):
+        if protocol is sqlite3.PrepareProtocol:
+            return self._uid
 
     @property
     def int(self):
@@ -38,10 +43,15 @@ class UID:
     @property
     def hex(self):
         return hex(self._uid)
+    
+    @classmethod
+    def timestamp_ms(cls) -> "int":
+        """The current Epoch timestamp, in miliseconds."""
+        return int(time.time() * 1000)
 
     def _initialize(self, i: Optional["int"] = None):
         if i is None:
-            time_ms = int(time.time() * 1000)
+            time_ms = self.timestamp_ms()
             time_padded = time_ms * 1000000
             rand = random.randrange(MAX_20BIT_INT)
             self._uid = time_padded + rand
